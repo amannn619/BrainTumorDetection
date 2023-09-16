@@ -1,6 +1,8 @@
 import numpy as np
 import cv2 as cv
 
+print("Hello")
+
 
 class DisplayTumor:
     curImg = 0
@@ -10,7 +12,8 @@ class DisplayTumor:
         self.Img = np.array(img)
         self.curImg = np.array(img)
         gray = cv.cvtColor(np.array(img), cv.COLOR_BGR2GRAY)
-        self.ret, self.thresh = cv.threshold(gray, 0, 255, cv.THRESH_BINARY_INV + cv.THRESH_OTSU)
+        self.ret, self.thresh = cv.threshold(
+            gray, 0, 255, cv.THRESH_BINARY_INV + cv.THRESH_OTSU)
 
     def getImage(self):
         return self.curImg
@@ -18,7 +21,8 @@ class DisplayTumor:
     # noise removal
     def removeNoise(self):
         self.kernel = np.ones((3, 3), np.uint8)
-        opening = cv.morphologyEx(self.thresh, cv.MORPH_OPEN, self.kernel, iterations=2)
+        opening = cv.morphologyEx(
+            self.thresh, cv.MORPH_OPEN, self.kernel, iterations=2)
         self.curImg = opening
 
     def displayTumor(self):
@@ -27,7 +31,8 @@ class DisplayTumor:
 
         # Finding sure foreground area
         dist_transform = cv.distanceTransform(self.curImg, cv.DIST_L2, 5)
-        ret, sure_fg = cv.threshold(dist_transform, 0.7 * dist_transform.max(), 255, 0)
+        ret, sure_fg = cv.threshold(
+            dist_transform, 0.7 * dist_transform.max(), 255, 0)
 
         # Find unknown region
         sure_fg = np.uint8(sure_fg)
